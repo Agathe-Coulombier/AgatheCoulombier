@@ -17,13 +17,13 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Selection color */
+/* Selection color - pop-100 */
 ::selection {
   background-color: #e07850;
   color: #faf8f5;
 }
 
-/* Scrollbar styling */
+/* Scrollbar - sand palette */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -39,4 +39,66 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #bfa882;
+}
+
+/* Custom fonts */
+@font-face {
+  font-family: 'MadeInfinity';
+  src: url('/fonts/MADEINFINITY PERSONALUSE-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MadeInfinity';
+  src: url('/fonts/MADEINFINITY PERSONALUSE-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MadeInfinity';
+  src: url('/fonts/MADEINFINITY PERSONALUSE-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MadeInfinity';
+  src: url('/fonts/MADEINFINITY PERSONALUSE-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MadeInfinity';
+  src: url('/fonts/MADEINFINITY PERSONALUSE-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+/* Hero text shadow - wave-700 */
+.hero-shadow {
+  text-shadow: 6px 8px 0 #0d2637;
+}
+
+/* Custom cursor */
+.custom-cursor-area {
+  cursor: none;
+  isolation: isolate;
+}
+
+.custom-cursor-area a,
+.custom-cursor-area button {
+  cursor: none;
+}
+
+/* Noise texture overlay */
+.noise {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }

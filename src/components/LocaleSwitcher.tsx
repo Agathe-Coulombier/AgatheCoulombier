@@ -2,13 +2,12 @@
 
 import { useTransition } from 'react';
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Locale, locales } from '@/i18n/config';
 
 export default function LocaleSwitcher() {
   const locale = useLocale() as Locale;
   const router = useRouter();
-  const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
   const switchLocale = (newLocale: Locale) => {
@@ -29,14 +28,14 @@ export default function LocaleSwitcher() {
             disabled={isPending}
             className={`uppercase transition-colors ${
               locale === loc
-                ? 'text-sand-100 font-bold'
-                : 'text-sand-400 hover:text-sand-200'
+                ? 'text-wave-700 font-bold'
+                : 'text-wave-900 hover:text-wave-700'
             } ${isPending ? 'opacity-50' : ''}`}
           >
             {loc}
           </button>
           {index < locales.length - 1 && (
-            <span className="text-sand-400 mx-2">/</span>
+            <span className="text-wave-900 mx-2">/</span>
           )}
         </span>
       ))}

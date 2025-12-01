@@ -1,21 +1,29 @@
 import {getRequestConfig} from 'next-intl/server';
-import {headers} from 'next/headers';
+import {cookies, headers} from 'next/headers';
 import {locales, defaultLocale, Locale} from './config';
 
 export default getRequestConfig(async () => {
-  // Get the accept-language header
-  const headersList = await headers();
-  const acceptLanguage = headersList.get('accept-language') || '';
+  // First check for locale cookie (user preference)
+  const cookieStore = await cookies();
+  const localeCookie = cookieStore.get('NEXT_LOCALE')?.value as Locale | undefined;
   
-  // Parse the accept-language header to detect user's preferred language
   let locale: Locale = defaultLocale;
   
-  // Check if French is preferred
-  if (acceptLanguage.toLowerCase().includes('fr')) {
-    locale = 'fr';
+  if (localeCookie && locales.includes(localeCookie)) {
+    // Use cookie preference if valid
+    locale = localeCookie;
   } else {
-    // Default to English for any other language
-    locale = 'en';
+    // Fall back to accept-language header detection
+    const headersList = await headers();
+    const acceptLanguage = headersList.get('accept-language') || '';
+    
+    // Check if French is preferred
+    if (acceptLanguage.toLowerCase().includes('fr')) {
+      locale = 'fr';
+    } else {
+      // Default to English for any other language
+      locale = 'en';
+    }
   }
   
   // Validate the locale

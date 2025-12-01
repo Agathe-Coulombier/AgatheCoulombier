@@ -44,7 +44,7 @@ export default function Contact() {
               type="email"
               id="email"
               name="email"
-              className="w-full px-4 py-3 bg-sand-100 border border-sand-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-ink-900"
+              className="w-full px-4 py-3 bg-sand-100 border border-sand-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-pop-100 text-ink-900"
               placeholder="your@email.com"
             />
           </div>
@@ -57,14 +57,14 @@ export default function Contact() {
               id="message"
               name="message"
               rows={6}
-              className="w-full px-4 py-3 bg-sand-100 border border-sand-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-ink-900 resize-none"
+              className="w-full px-4 py-3 bg-sand-100 border border-sand-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-pop-100 text-ink-900 resize-none"
               placeholder="Your message..."
             />
           </div>
 
           <button
             type="submit"
-            className="px-8 py-4 bg-accent text-sand-100 font-semibold rounded-lg hover:bg-accent-dark transition-colors text-lg"
+            className="px-8 py-4 bg-pop-100 text-sand-100 font-semibold rounded-lg hover:bg-pop-200 transition-colors text-lg"
           >
             {t('contact.send')}
           </button>
@@ -79,7 +79,7 @@ export default function Contact() {
         >
           <a
             href="mailto:contact@agatheCoulombier.com"
-            className="text-lg text-ink-600 hover:text-accent transition-colors"
+            className="text-lg text-ink-600 hover:text-pop-100 transition-colors"
             title="Email"
           >
             contact@agatheCoulombier.com
@@ -88,7 +88,7 @@ export default function Contact() {
             href="https://github.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg text-ink-600 hover:text-accent transition-colors"
+            className="text-lg text-ink-600 hover:text-pop-100 transition-colors"
             title="GitHub"
           >
             GitHub
@@ -97,7 +97,7 @@ export default function Contact() {
             href="https://linkedin.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-lg text-ink-600 hover:text-accent transition-colors"
+            className="text-lg text-ink-600 hover:text-pop-100 transition-colors"
             title="LinkedIn"
           >
             LinkedIn

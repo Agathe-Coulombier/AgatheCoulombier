@@ -33,14 +33,28 @@ const config: Config = {
           800: '#1a1a1a',
           900: '#0d0d0d',
         },
-        accent: {
-          DEFAULT: '#e07850',
-          light: '#f0a080',
-          dark: '#c05830',
+        pop: {
+          100: '#e07850',
+          50: '#f0a080',
+          200: '#c05830',
+        },
+        // Wave/Water palette extracted from the image
+        wave: {
+          50: '#e8f4f8',   // Lightest - soft sky reflection
+          100: '#b8e4f0',  // Light cyan highlights
+          200: '#7ec8e3',  // Sky blue reflections
+          300: '#4aa8c7',  // Bright water
+          400: '#3a9bb5',  // Teal cyan
+          500: '#1a5a7a',  // Ocean blue (primary)
+          600: '#0d3a5c',  // Deep water
+          700: '#0d2637',  // Dark navy shadows
+          800: '#0a1a28',  // Very dark blue
+          900: '#0a0f14',  // Near black - deepest shadows
         },
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        madeinfinity: ['MadeInfinity', 'sans-serif'],
       },
     },
   },
