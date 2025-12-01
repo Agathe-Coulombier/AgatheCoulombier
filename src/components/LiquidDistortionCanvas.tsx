@@ -34,25 +34,93 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       uniform vec2 u_mouse;
       uniform float u_time;
       uniform float u_hover;
+      uniform vec2 u_resolution;
       varying vec2 v_texCoord;
+
+      // Simplex noise function for organic movement
+      vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+      float snoise(vec2 v) {
+        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                          -0.577350269189626, 0.024390243902439);
+        vec2 i  = floor(v + dot(v, C.yy));
+        vec2 x0 = v -   i + dot(i, C.xx);
+        vec2 i1;
+        i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+        vec4 x12 = x0.xyxy + C.xxzz;
+        x12.xy -= i1;
+        i = mod289(i);
+        vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
+                        + i.x + vec3(0.0, i1.x, 1.0));
+        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+                                dot(x12.zw,x12.zw)), 0.0);
+        m = m*m;
+        m = m*m;
+        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+        vec3 h = abs(x) - 0.5;
+        vec3 ox = floor(x + 0.5);
+        vec3 a0 = x - ox;
+        m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+        vec3 g;
+        g.x  = a0.x  * x0.x  + h.x  * x0.y;
+        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+        return 130.0 * dot(m, g);
+      }
 
       void main() {
         vec2 uv = v_texCoord;
         
+        // === EDGE FADE - reduces distortion near edges to prevent artifacts ===
+        float edgePadding = 0.08; // Size of the fade zone near edges
+        float edgeFade = smoothstep(0.0, edgePadding, uv.x) * 
+                         smoothstep(0.0, edgePadding, uv.y) * 
+                         smoothstep(0.0, edgePadding, 1.0 - uv.x) * 
+                         smoothstep(0.0, edgePadding, 1.0 - uv.y);
+        
+        // === PERMANENT GLOBAL WAVE EFFECT ===
+        // Multiple layers of slow, organic waves for realistic water movement
+        float slowTime = u_time * 0.25; // Moderate speed for visible movement
+        
+        // Layer 1: Large, slow undulating waves - STRONG
+        float wave1 = snoise(vec2(uv.x * 2.0 + slowTime * 0.5, uv.y * 1.5 + slowTime * 0.3)) * 0.025;
+        float wave2 = snoise(vec2(uv.x * 1.5 - slowTime * 0.4, uv.y * 2.0 + slowTime * 0.25)) * 0.02;
+        
+        // Layer 2: Medium frequency waves
+        float wave3 = snoise(vec2(uv.x * 4.0 + slowTime * 0.6, uv.y * 3.0 - slowTime * 0.5)) * 0.015;
+        float wave4 = snoise(vec2(uv.x * 3.5 - slowTime * 0.35, uv.y * 4.0 + slowTime * 0.45)) * 0.012;
+        
+        // Layer 3: Fine detail ripples
+        float wave5 = snoise(vec2(uv.x * 8.0 + slowTime * 0.8, uv.y * 6.0 - slowTime * 0.6)) * 0.008;
+        
+        // Combine all waves for organic water movement - apply edge fade
+        vec2 globalDistortion = vec2(
+          wave1 + wave3 + wave5,
+          wave2 + wave4 + wave5 * 0.7
+        ) * edgeFade;
+        
+        // Apply global wave distortion
+        uv += globalDistortion;
+        
+        // === HOVER EFFECT (existing) ===
         // Calculate distance from mouse
         float dist = distance(uv, u_mouse);
         
         // Create liquid ripple effect - more focused and powerful
         float ripple = sin(dist * 35.0 - u_time * 4.0) * 0.5 + 0.5;
-        float strength = smoothstep(0.3, 0.0, dist) * u_hover * 0.1; // More focused (0.25) and stronger (0.15)
+        float strength = smoothstep(0.3, 0.0, dist) * u_hover * 0.1;
         
-        // Distort UV coordinates with waves - more powerful effect
-        vec2 distortion = vec2(
+        // Distort UV coordinates with waves - more powerful effect (also apply edge fade)
+        vec2 hoverDistortion = vec2(
           sin(uv.y * 12.0 + u_time * 1.5) * strength * ripple,
           cos(uv.x * 12.0 + u_time * 1.5) * strength * ripple
-        );
+        ) * edgeFade;
         
-        uv += distortion;
+        uv += hoverDistortion;
+        
+        // Clamp UV to prevent any remaining edge sampling issues
+        uv = clamp(uv, 0.001, 0.999);
         
         gl_FragColor = texture2D(u_texture, uv);
       }
@@ -119,6 +187,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
     const mouseLocation = gl.getUniformLocation(program, 'u_mouse');
     const timeLocation = gl.getUniformLocation(program, 'u_time');
     const hoverLocation = gl.getUniformLocation(program, 'u_hover');
+    const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
     // Load and create texture
     const texture = gl.createTexture();
@@ -217,6 +286,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       gl.uniform2f(mouseLocation, mouseX, mouseY);
       gl.uniform1f(timeLocation, time);
       gl.uniform1f(hoverLocation, hover);
+      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
 
       // Draw
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
