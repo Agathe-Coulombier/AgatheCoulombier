@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "job": "Web Developer",
+    "name": "I am Agathe Coulombier",
+    "tagline": "I'll bring your ideas to life online."
+  },
+  "nav": {
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "cta": {
+    "letsmeet": "Let's connect",
+    "portfolio": "Portfolio"
+  },
+  "about": {
+    "title": "About Me",
+    "description": "I'm a passionate web developer who loves creating beautiful and functional websites."
+  },
+  "projects": {
+    "title": "My Projects",
+    "description": "A selection of my recent work and personal projects."
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "description": "Have a project in mind? Let's work together!",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send Message"
+  },
+  "locale": {
+    "fr": "FR",
+    "en": "EN"
+  }
+}

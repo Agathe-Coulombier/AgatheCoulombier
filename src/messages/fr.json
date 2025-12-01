@@ -1,0 +1,35 @@
+{
+  "hero": {
+    "job": "Développeuse Web",
+    "name": "Je suis Agathe Coulombier",
+    "tagline": "Je donne vie à vos idées en ligne."
+  },
+  "nav": {
+    "about": "À propos",
+    "projects": "Projets",
+    "contact": "Contact"
+  },
+  "cta": {
+    "letsmeet": "Connectons-nous",
+    "portfolio": "Portfolio"
+  },
+  "about": {
+    "title": "À Propos",
+    "description": "Je suis une développeuse web passionnée qui aime créer des sites web beaux et fonctionnels."
+  },
+  "projects": {
+    "title": "Mes Projets",
+    "description": "Une sélection de mes travaux récents et projets personnels."
+  },
+  "contact": {
+    "title": "Me Contacter",
+    "description": "Vous avez un projet en tête ? Travaillons ensemble !",
+    "email": "Email",
+    "message": "Message",
+    "send": "Envoyer"
+  },
+  "locale": {
+    "fr": "FR",
+    "en": "EN"
+  }
+}
