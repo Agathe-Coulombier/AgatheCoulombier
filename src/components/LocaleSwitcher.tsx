@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
 import { Locale, locales } from '@/i18n/config';
 
 export default function LocaleSwitcher() {
@@ -19,26 +20,47 @@ export default function LocaleSwitcher() {
     });
   };
 
+  const wordVariants = {
+    hidden: { 
+      x: -30, 
+      opacity: 0,
+    },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: {
+        type: 'spring',
+        damping: 12,
+        stiffness: 100,
+      },
+    },
+  };
+
   return (
-    <div className="flex items-center gap-2 text-sm font-medium">
+    <motion.div 
+      className="flex items-center text-sm font-medium font-futuralt text-sm md:text-base lg:text-lg"
+      initial="hidden"
+      animate="visible"
+      transition={{ staggerChildren: 0.1, delayChildren: 0.5 }}
+    >
       {locales.map((loc, index) => (
-        <span key={loc} className="flex items-center">
+        <motion.span key={loc} className="flex items-center" variants={wordVariants}>
           <button
             onClick={() => switchLocale(loc)}
             disabled={isPending}
             className={`uppercase transition-colors ${
               locale === loc
-                ? 'text-wave-700 font-bold'
-                : 'text-wave-900 hover:text-wave-700'
+                ? 'text-wave-100 md:text-wave-600 font-bold'
+                : 'text-wave-50 hover:text-wave-100 md:text-wave-500 md:hover:text-wave-600 font-black'
             } ${isPending ? 'opacity-50' : ''}`}
           >
             {loc}
           </button>
           {index < locales.length - 1 && (
-            <span className="text-wave-900 mx-2">/</span>
+            <span className="text-wave-50 md:text-wave-600 mx-2 font-black">/</span>
           )}
-        </span>
+        </motion.span>
       ))}
-    </div>
+    </motion.div>
   );
 }

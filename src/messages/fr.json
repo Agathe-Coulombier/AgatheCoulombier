@@ -1,6 +1,12 @@
 {
   "hero": {
-    "job": "Développeuse Web",
+    "title": "Je suis Agathe Coulombier, une développeuse Web qui donne vie à vos idées en ligne.",
+    "line1": "Je suis Agathe",
+    "line2": "Coulombier,",
+    "line3": "Une développeuse",
+    "line4": "Web qui donne",
+    "line5": "Vie à vos idées",
+    "line6": "En ligne.",
     "name": "Je suis Agathe Coulombier",
     "tagline": "Je donne vie à vos idées en ligne."
   },

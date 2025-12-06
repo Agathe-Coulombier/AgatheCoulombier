@@ -5,6 +5,47 @@
 :root {
   --foreground-rgb: 13, 13, 13;
   --background-rgb: 250, 248, 245;
+
+  /* Sand palette */
+  --sand-50: #faf8f5;
+  --sand-100: #f5f0e8;
+  --sand-200: #e8dfd0;
+  --sand-300: #d4c4a8;
+  --sand-400: #bfa882;
+  --sand-500: #a68c5b;
+  --sand-600: #8a7048;
+  --sand-700: #6e5839;
+  --sand-800: #52412b;
+  --sand-900: #362a1c;
+
+  /* Ink palette */
+  --ink-50: #f5f5f5;
+  --ink-100: #e5e5e5;
+  --ink-200: #cccccc;
+  --ink-300: #b3b3b3;
+  --ink-400: #999999;
+  --ink-500: #666666;
+  --ink-600: #4d4d4d;
+  --ink-700: #333333;
+  --ink-800: #1a1a1a;
+  --ink-900: #0d0d0d;
+
+  /* Pop palette */
+  --pop-50: #f0a080;
+  --pop-100: #e07850;
+  --pop-200: #c05830;
+
+  /* Wave palette */
+  --wave-50: #e8f4f8;
+  --wave-100: #b8e4f0;
+  --wave-200: #7ec8e3;
+  --wave-300: #4aa8c7;
+  --wave-400: #3a9bb5;
+  --wave-500: #1a5a7a;
+  --wave-600: #0d3a5c;
+  --wave-700: #0d2637;
+  --wave-800: #0a1a28;
+  --wave-900: #0a0f14;
 }
 
 body {
@@ -12,68 +53,77 @@ body {
   background: rgb(var(--background-rgb));
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
 
-/* Selection color - pop-100 */
-::selection {
-  background-color: #e07850;
-  color: #faf8f5;
-}
-
-/* Scrollbar - sand palette */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f5f0e8;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d4c4a8;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #bfa882;
-}
-
-/* Custom fonts */
+/* FuturaLT font family */
 @font-face {
-  font-family: 'MadeInfinity';
-  src: url('/fonts/MADEINFINITY PERSONALUSE-Black.otf') format('opentype');
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-Book.ttf') format('truetype');
+  font-weight: 450;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-Condensed.ttf') format('truetype');
+  font-weight: 400;
+  font-stretch: condensed;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-CondensedBold.ttf') format('truetype');
+  font-weight: 700;
+  font-stretch: condensed;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-CondensedExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-stretch: condensed;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-CondensedLight.ttf') format('truetype');
+  font-weight: 300;
+  font-stretch: condensed;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-Heavy.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
-
 @font-face {
-  font-family: 'MadeInfinity';
-  src: url('/fonts/MADEINFINITY PERSONALUSE-Light.otf') format('opentype');
+  font-family: 'FuturaLT';
+  src: url('/fonts/FuturaLT-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'MadeInfinity';
-  src: url('/fonts/MADEINFINITY PERSONALUSE-Medium.otf') format('opentype');
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'MadeInfinity';
-  src: url('/fonts/MADEINFINITY PERSONALUSE-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'MadeInfinity';
-  src: url('/fonts/MADEINFINITY PERSONALUSE-Thin.otf') format('opentype');
-  font-weight: 100;
+  font-family: 'Goudi';
+  src: url('/fonts/Goudi.ttf') format('truetype');
+  font-weight: 300;
   font-style: normal;
 }
 

@@ -36,6 +36,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       uniform float u_hover;
       uniform vec2 u_resolution;
       uniform vec2 u_imageSize;
+      uniform float u_fadeIn;
       varying vec2 v_texCoord;
 
       // Simplex noise function for organic movement
@@ -71,6 +72,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       }
 
       // Function to apply "cover" behavior to UV coordinates
+      // Anchors to left side with offset so on narrow screens, right side is cropped
       vec2 coverUV(vec2 uv, vec2 resolution, vec2 imageSize) {
         float canvasAspect = resolution.x / resolution.y;
         float imageAspect = imageSize.x / imageSize.y;
@@ -79,84 +81,55 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
         vec2 offset = vec2(0.0);
         
         if (canvasAspect > imageAspect) {
-          // Canvas is wider than image - scale to fit width, crop height
+          // Canvas is wider than image - scale to fit width, crop height (center vertically)
           scale.y = imageAspect / canvasAspect;
           offset.y = (1.0 - scale.y) * 0.5;
         } else {
-          // Canvas is taller than image - scale to fit height, crop width
+          // Canvas is taller than image - scale to fit height, crop width from RIGHT (anchor left with offset)
           scale.x = canvasAspect / imageAspect;
-          offset.x = (1.0 - scale.x) * 0.5;
+          offset.x = 0.12; // Fixed 0.12 offset to anchor left
         }
         
         return uv * scale + offset;
       }
 
       void main() {
-        vec2 uv = v_texCoord;
+        // Apply "cover" transformation FIRST to get proper UV coordinates
+        vec2 uv = coverUV(v_texCoord, u_resolution, u_imageSize);
         
-        // === EDGE FADE - reduces distortion near edges to prevent artifacts ===
-        float edgePadding = 0.08; // Size of the fade zone near edges
+        // === EDGE FADE - calculated on cover coordinates to prevent artifacts ===
+        float edgePadding = 0.12;
         float edgeFade = smoothstep(0.0, edgePadding, uv.x) * 
                          smoothstep(0.0, edgePadding, uv.y) * 
                          smoothstep(0.0, edgePadding, 1.0 - uv.x) * 
                          smoothstep(0.0, edgePadding, 1.0 - uv.y);
         
-        // === WIGGLE SYSTEM - smooth variation over time ===
-        // Creates organic, breathing variation in the wave intensity
-        float wiggleTime = u_time * 0.1; // Moderate base wiggle
-        float amplitudeWiggle = 0.8 + 0.2 * sin(wiggleTime * 1.0) * sin(wiggleTime * 0.6 + 1.5);
-        float speedWiggle = 0.85 + 0.25 * sin(wiggleTime * 0.75) * cos(wiggleTime * 0.9 + 0.8);
+        // === WAVE EFFECT - randomized to avoid visible sweep lines ===
+        // Start time offset to skip initial transient + use prime-like multipliers to avoid patterns
+        float t = u_time + 100.0;
         
-        // === PERMANENT GLOBAL WAVE EFFECT ===
-        // Multiple layers of slow, organic waves for realistic water movement
-        float slowTime = u_time * 0.4 * speedWiggle; // Balanced animation speed
+        // Use non-aligned frequencies and offsets to prevent coherent wavefronts
+        float wave1 = snoise(vec2(uv.x * 2.3 + t * 0.07, uv.y * 1.7 - t * 0.05)) * 0.010;
+        float wave2 = snoise(vec2(uv.x * 1.9 - t * 0.06, uv.y * 2.3 + t * 0.04)) * 0.008;
         
-        // Layer 1: Large, slow undulating waves - noticeable but smooth
-        float wave1 = snoise(vec2(uv.x * 1.8 + slowTime * 0.4, uv.y * 1.3 + slowTime * 0.25)) * 0.018 * amplitudeWiggle;
-        float wave2 = snoise(vec2(uv.x * 1.3 - slowTime * 0.3, uv.y * 1.8 + slowTime * 0.2)) * 0.015 * amplitudeWiggle;
-        
-        // Layer 2: Medium frequency waves (slightly different wiggle phase)
-        float ampWiggle2 = 0.8 + 0.2 * sin(wiggleTime * 1.4 + 2.0);
-        float wave3 = snoise(vec2(uv.x * 3.5 + slowTime * 0.45, uv.y * 2.8 - slowTime * 0.4)) * 0.011 * ampWiggle2;
-        float wave4 = snoise(vec2(uv.x * 3.0 - slowTime * 0.28, uv.y * 3.5 + slowTime * 0.35)) * 0.009 * ampWiggle2;
-        
-        // Layer 3: Fine detail ripples (own wiggle rhythm) - subtle accent
-        float ampWiggle3 = 0.7 + 0.3 * sin(wiggleTime * 1.8 + 3.5);
-        float wave5 = snoise(vec2(uv.x * 6.0 + slowTime * 0.55, uv.y * 5.0 - slowTime * 0.45)) * 0.006 * ampWiggle3;
-        
-        // Combine all waves for organic water movement - apply edge fade
-        vec2 globalDistortion = vec2(
-          wave1 + wave3 + wave5,
-          wave2 + wave4 + wave5 * 0.7
-        ) * edgeFade;
-        
-        // Apply global wave distortion
+        // Apply waves with edge fade and fade-in
+        vec2 globalDistortion = vec2(wave1, wave2) * edgeFade * u_fadeIn;
         uv += globalDistortion;
         
-        // === HOVER EFFECT with smooth wiggle ===
-        // Calculate distance from mouse
+        // === HOVER EFFECT (simplified) ===
         float dist = distance(uv, u_mouse);
+        float ripple = sin(dist * 20.0 - u_time * 2.5) * 0.5 + 0.5;
+        float strength = smoothstep(0.3, 0.0, dist) * u_hover * 0.06;
         
-        // Hover wiggle - moderate variation for organic feel
-        float hoverWiggle = 0.85 + 0.15 * sin(u_time * 2.0) * sin(u_time * 1.5 + 1.0);
-        
-        // Create liquid ripple effect - balanced and smooth
-        float ripple = sin(dist * 25.0 - u_time * 3.0 * speedWiggle) * 0.5 + 0.5;
-        float strength = smoothstep(0.32, 0.0, dist) * u_hover * 0.08 * hoverWiggle;
-        
-        // Distort UV coordinates with waves - noticeable but controlled (also apply edge fade)
         vec2 hoverDistortion = vec2(
-          sin(uv.y * 10.0 + u_time * 1.2) * strength * ripple,
-          cos(uv.x * 10.0 + u_time * 1.2) * strength * ripple
+          sin(uv.y * 8.0 + u_time) * strength * ripple,
+          cos(uv.x * 8.0 + u_time) * strength * ripple
         ) * edgeFade;
         
         uv += hoverDistortion;
         
-        // Apply "cover" transformation to make image fill without distortion
-        uv = coverUV(uv, u_resolution, u_imageSize);
-        
-        // Clamp UV to prevent any remaining edge sampling issues
-        uv = clamp(uv, 0.001, 0.999);
+        // Clamp UV to prevent edge sampling issues
+        uv = clamp(uv, 0.002, 0.998);
         
         gl_FragColor = texture2D(u_texture, uv);
       }
@@ -225,10 +198,12 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
     const hoverLocation = gl.getUniformLocation(program, 'u_hover');
     const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
     const imageSizeLocation = gl.getUniformLocation(program, 'u_imageSize');
+    const fadeInLocation = gl.getUniformLocation(program, 'u_fadeIn');
 
     // Image dimensions (will be set when image loads)
     let imageWidth = 1;
     let imageHeight = 1;
+    let imageLoaded = false;
 
     // Load and create texture
     const texture = gl.createTexture();
@@ -245,6 +220,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      imageLoaded = true;
     };
 
     // Mouse tracking
@@ -296,8 +272,18 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
     // Animation loop
     let animationId: number;
     const startTime = Date.now();
+    let fadeIn = 0; // Start with no distortion, fade in gradually
 
     const render = () => {
+      // Don't render until image is loaded to prevent artifacts
+      if (!imageLoaded) {
+        animationId = requestAnimationFrame(render);
+        return;
+      }
+      
+      // Fade in the distortion effect smoothly over ~1 second
+      fadeIn = Math.min(1, fadeIn + 0.02);
+      
       // Keep time in a reasonable range to avoid floating point precision issues
       // Use modulo to cycle every ~10 minutes (600 seconds)
       const time = ((Date.now() - startTime) / 1000) % 600;
@@ -333,6 +319,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
       gl.uniform1f(hoverLocation, hover);
       gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
       gl.uniform2f(imageSizeLocation, imageWidth, imageHeight);
+      gl.uniform1f(fadeInLocation, fadeIn);
 
       // Draw
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);

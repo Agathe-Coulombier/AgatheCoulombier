@@ -54,7 +54,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        madeinfinity: ['MadeInfinity', 'sans-serif'],
+        futuralt: ['FuturaLT', 'sans-serif'],
+        goudy: ['Goudi', 'serif'],
       },
     },
   },
