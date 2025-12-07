@@ -55,7 +55,7 @@ export default function AnimatedWords({
         <motion.span
           key={index}
           variants={wordVariants}
-          className="inline-block mr-[0.25em]"
+          className="inline-block mr-3"
         >
           {word}
         </motion.span>

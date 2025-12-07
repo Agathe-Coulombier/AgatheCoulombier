@@ -36,20 +36,20 @@ export default function Hero() {
       </div>
       <div className="noise" />
 
-      {/* Language switcher - Centered on phone, top-right on tablet+ */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-8 md:top-12 md:right-12 lg:top-24 lg:right-20 z-20 cta-hover-target">
+      {/* Language switcher - Centered on phone/small tablet, top-right on larger screens */}
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:top-32 md:right-[48px] lg:top-28 lg:right-[64px] z-20 cta-hover-target">
         <LocaleSwitcher />
       </div>
 
       {/* Main content - uses viewport height */}
       <div className="h-[100dvh] flex flex-col lg:flex-row relative">
         {/* Hero Title - centered in viewport on mobile, takes 3/4 on desktop */}
-        <div className="w-full lg:w-3/4 h-full flex items-center px-6 md:pl-12 lg:pl-20 z-10">
-          <h1 className="flex flex-col font-futuralt font-black uppercase gap-2 md:gap-4 lg:gap-6 leading-tight">
+        <div className="w-full lg:w-3/4 h-fit my-28 md:my-32 lg:my-28 flex items-center px-4 md:pl-12 md:pr-0 lg:pl-16 z-10">
+          <h1 className="w-full flex flex-col font-futuralt font-black uppercase gap-6 md:gap-8 lg:gap-6 leading-tight text-center md:text-left">
             {heroLines.map((line, index) => (
               <span
                 key={`${locale}-${index}`}
-                className="text-4xl md:text-4xl lg:text-5xl xl:text-6xl text-wave-50 md:text-wave-100"
+                className="text-4xl md:text-5xl xl:text-6xl text-wave-50 md:text-wave-100"
                 style={{
                   textShadow: '4px 2px 0 var(--wave-600), 0 0 40px var(--wave-900)',
                 }}
@@ -65,10 +65,10 @@ export default function Hero() {
           </h1>
         </div>
 
-        {/* Navigation - Centered on phone, bottom-right on tablet+ */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-8 md:bottom-12 md:right-12 lg:bottom-24 lg:right-20 z-10">
+        {/* Navigation - Centered on phone/small tablet, bottom-right on larger screens */}
+    <div className="absolute bottom-16 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:bottom-32 md:right-[36px] lg:bottom-28 lg:right-[52px] z-10">
           <nav>
-            <ul className="text-right space-y-1 text-xl md:text-2xl lg:text-3xl uppercase text-wave-100 md:text-wave-600">
+            <ul className="text-center md:text-right space-y-4 md:space-y-1 text-xl md:text-2xl lg:text-3xl uppercase text-wave-100 md:text-wave-600">
               {navItems.map((item, index) => (
                 <li key={`${locale}-nav-${index}`}>
                   <a 

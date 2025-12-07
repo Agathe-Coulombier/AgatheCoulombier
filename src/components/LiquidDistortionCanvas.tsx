@@ -87,7 +87,7 @@ export default function LiquidDistortionCanvas({ imageSrc }: { imageSrc: string 
         } else {
           // Canvas is taller than image - scale to fit height, crop width from RIGHT (anchor left with offset)
           scale.x = canvasAspect / imageAspect;
-          offset.x = 0.12; // Fixed 0.12 offset to anchor left
+          offset.x = 0.06; // Fixed 0.12 offset to anchor left
         }
         
         return uv * scale + offset;

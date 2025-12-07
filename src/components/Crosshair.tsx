@@ -5,9 +5,21 @@ export default function Crosshair() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
   const [isCtaHover, setIsCtaHover] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    // Detect touch device
+    const checkTouchDevice = () => {
+      setIsTouchDevice(
+        'ontouchstart' in window || 
+        navigator.maxTouchPoints > 0
+      );
+    };
+    checkTouchDevice();
+
     const handleMouseMove = (e: MouseEvent) => {
+      // Ignore if touch device
+      if (isTouchDevice) return;
       setPosition({ x: e.clientX, y: e.clientY });
       setIsVisible(true);
     };
@@ -42,9 +54,10 @@ export default function Crosshair() {
         el.removeEventListener('mouseleave', handleCtaLeave);
       });
     };
-  }, []);
+  }, [isTouchDevice]);
 
-  if (!isVisible) return null;
+  // Don't render anything on touch devices
+  if (isTouchDevice || !isVisible) return null;
 
   return (
     <div
